@@ -23,6 +23,7 @@
 
 #include "messages.h"
 #include "timer.h"
+#include "debug.h"
 
 static volatile char tiny = 0;
 
@@ -30,28 +31,38 @@ void usbInit(void) {
 	emulatorSocketInit();
 }
 
+#if DEBUG_LINK
+#define _ISDBG ((debug ? 'd' : 'n'))
+#else
+#define _ISDBG ('n')
+#endif
+
 void usbPoll(void) {
 	emulatorPoll();
 
 	static uint8_t buffer[64];
-	if (emulatorSocketRead(buffer, sizeof(buffer)) > 0) {
+
+	int debug = 0;
+	if (emulatorSocketRead(buffer, sizeof(buffer), &debug) > 0) {
 		if (!tiny) {
-			msg_read(buffer, sizeof(buffer));
+			msg_read_common(_ISDBG, buffer, sizeof(buffer));
 		} else {
 			msg_read_tiny(buffer, sizeof(buffer));
 		}
 	}
 
+	debug = 0;
 	const uint8_t *data = msg_out_data();
 
 #if DEBUG_LINK
 	if (data == NULL) {
+		debug = 1;
 		data = msg_debug_out_data();
 	}
 #endif
 
 	if (data != NULL) {
-		emulatorSocketWrite(data, 64);
+		emulatorSocketWrite(data, 64, debug);
 	}
 }
 
