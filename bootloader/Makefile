@@ -12,6 +12,7 @@ OBJS += ../vendor/trezor-crypto/memzero.small.o
 
 CFLAGS += -DUSE_PRECOMPUTED_IV=0
 CFLAGS += -DUSE_PRECOMPUTED_CP=0
+CFLAGS += -DUSE_CARDANO=0
 
 OPTFLAGS ?= -Os
 
