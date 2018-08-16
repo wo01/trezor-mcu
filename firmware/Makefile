@@ -114,6 +114,7 @@ CFLAGS += -DSCM_REVISION='"$(shell git rev-parse HEAD | sed 's:\(..\):\\x\1:g')"
 CFLAGS += -DUSE_ETHEREUM=1
 CFLAGS += -DUSE_NEM=1
 CFLAGS += -DUSE_MONERO=0
+CFLAGS += -DUSE_CARDANO=0
 
 define GENERATE_CODE
 # $(1) - Basename for script and output header file
